@@ -12,9 +12,9 @@
     <application
         android:name=".MindGuardApplication"
         android:allowBackup="true"
-        android:icon="@android:mipmap/sym_def_app_icon"
+        android:icon="@drawable/ic_launcher"
         android:label="MindGuard AI"
-        android:roundIcon="@android:mipmap/sym_def_app_icon"
+        android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MindGuard"
         android:usesCleartextTraffic="false">
