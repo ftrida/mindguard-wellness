@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: mindguard_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: mindguard
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: dbadmin
+      MYSQL_PASSWORD: dbpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mindguard_backend
+    restart: always
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: mysql+aiomysql://dbadmin:dbpassword@database:3306/mindguard
+      JWT_SECRET_KEY: production_access_secret_key_change_me
+      JWT_REFRESH_SECRET_KEY: production_refresh_secret_key_change_me
+    ports:
+      - "10000:10000"
+
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    container_name: mindguard_website
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:10000
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
