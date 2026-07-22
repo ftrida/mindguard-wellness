@@ -29,7 +29,7 @@ class GeminiAIProvider(BaseAIProvider):
     async def generate_response(self, prompt: str, history: List[Dict[str, str]], context: Dict[str, Any]) -> str:
         logger.info("Calling Google Gemini REST API...")
         api_key = settings.GEMINI_API_KEY or "AQ.Ab8RN6K468zq7B96y4rfVpTamJtgtjUOgQT-oinJtPjp-cAdTQ"
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash-lite:generateContent?key={api_key}"
 
         # Build prompt with instruction
         system_instruction = (

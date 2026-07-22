@@ -37,7 +37,8 @@ class DailyLifestyleLogCreate(DailyLifestyleLogBase):
     @field_validator("log_date")
     @classmethod
     def validate_log_date(cls, v: date) -> date:
-        if v > date.today():
+        from datetime import timedelta
+        if v > date.today() + timedelta(days=1):
             raise ValueError("Log date cannot be in the future")
         return v
 
