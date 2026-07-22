@@ -28,21 +28,11 @@ from app.core.config import settings
 from app.exceptions.handlers import register_exception_handlers
 from app.middleware.logging_middleware import LoggingMiddleware
 from app.core.scheduler import start_scheduler, shutdown_scheduler
+from app.core.logging_config import setup_production_logging
+from app.middleware.security_middleware import SecurityMiddleware
 
-# Configure logging formatters and handlers
-def setup_logging() -> None:
-    logging_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    logging.basicConfig(
-        level=logging.INFO if not settings.DEBUG else logging.DEBUG,
-        format=logging_format,
-        handlers=[
-            logging.StreamHandler(sys.stdout)
-        ]
-    )
-    logger = logging.getLogger("mindguard")
-    logger.info("Structured logging initialized.")
-
-setup_logging()
+# Configure logging to output JSON structure
+setup_production_logging()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -74,13 +64,14 @@ app.add_middleware(
 
 # Register request logging middleware
 app.add_middleware(LoggingMiddleware)
+app.add_middleware(SecurityMiddleware)
 
 # Register custom API exceptions and global handler overrides
 register_exception_handlers(app)
 
 # Include API routers under the /api/v1 namespace prefix
 app.include_router(auth_router, prefix="/api/v1")
-app.include_router(health_router, prefix="/api/v1")
+app.include_router(health_router)
 app.include_router(profile_router, prefix="/api/v1")
 app.include_router(lifestyle_router, prefix="/api/v1")
 app.include_router(mood_router, prefix="/api/v1")

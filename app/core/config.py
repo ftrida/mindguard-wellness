@@ -55,4 +55,7 @@ class Settings(BaseSettings):
     SMTP_FROM_EMAIL: str = ""
     SMTP_FROM_NAME: str = "MindGuard AI Team"
 
+    # AI Configuration
+    AI_PROVIDER: str = "mock"
+
 settings = Settings()

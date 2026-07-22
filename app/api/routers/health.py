@@ -1,55 +1,48 @@
 import time
+import os
+import psutil
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import text
 from app.api.dependencies import get_db
+from app.core.config import settings
+from app.core.scheduler import scheduler
+from app.core.ai_provider import get_ai_provider
 
-router = APIRouter(prefix="/health", tags=["Health Checks"])
+router = APIRouter(tags=["Health Checks"])
 
-@router.get("/live", status_code=status.HTTP_200_OK)
-async def live_check():
+@router.get("/health", status_code=status.HTTP_200_OK)
+async def health_check(db: AsyncSession = Depends(get_db)):
     """
-    Liveness probe. Confirms the API container is running.
+    Consolidated Health check endpoint for database, scheduler, and system resources.
     """
-    return {
-        "status": "healthy",
-        "timestamp": time.time()
-    }
-
-@router.get("/ready", status_code=status.HTTP_200_OK)
-async def ready_check(db: AsyncSession = Depends(get_db)):
-    """
-    Readiness probe. Checks active database connectivity.
-    """
-    db_healthy = False
+    db_status = "disconnected"
     try:
-        # Run a simple query to assert DB health
-        result = await db.execute(text("SELECT 1"))
-        if result.scalar() == 1:
-            db_healthy = True
+        await db.execute(text("SELECT 1"))
+        db_status = "connected"
     except Exception:
         pass
 
-    if db_healthy:
-        return {
-            "status": "ready",
-            "timestamp": time.time(),
-            "services": {
-                "database": "connected",
-                "redis": "connected_mock"
-            }
-        }
-    else:
-        return {
-            "status": "unhealthy",
-            "timestamp": time.time(),
-            "services": {
-                "database": "disconnected",
-                "redis": "connected_mock"
-            }
-        }
+    sched_status = "stopped"
+    if scheduler.running:
+        sched_status = "running"
 
-@router.get("/database", status_code=status.HTTP_200_OK)
+    process = psutil.Process(os.getpid())
+    memory_info = process.memory_info()
+
+    return {
+        "status": "healthy" if db_status == "connected" else "unhealthy",
+        "timestamp": time.time(),
+        "database": db_status,
+        "scheduler": sched_status,
+        "system": {
+            "memory_used_mb": round(memory_info.rss / (1024 * 1024), 2),
+            "cpu_percent": psutil.cpu_percent(),
+        },
+        "version": "1.0.0"
+    }
+
+@router.get("/health/database", status_code=status.HTTP_200_OK)
 async def database_check(db: AsyncSession = Depends(get_db)):
     """
     Detailed Database health verification check.
@@ -68,20 +61,49 @@ async def database_check(db: AsyncSession = Depends(get_db)):
             "error": str(e)
         }
 
-@router.get("/system", status_code=status.HTTP_200_OK)
+@router.get("/health/system", status_code=status.HTTP_200_OK)
 async def system_check():
     """
     Returns core service performance statistics.
     """
-    import os
-    import psutil
-
     process = psutil.Process(os.getpid())
     memory_info = process.memory_info()
-
     return {
         "status": "online",
         "cpu_usage_percent": psutil.cpu_percent(),
         "memory_used_bytes": memory_info.rss,
         "active_threads": process.num_threads()
+    }
+
+@router.get("/health/scheduler", status_code=status.HTTP_200_OK)
+async def scheduler_check():
+    """
+    Checks if the background job scheduler is running.
+    """
+    return {
+        "scheduler_running": scheduler.running,
+        "jobs_count": len(scheduler.get_jobs())
+    }
+
+@router.get("/health/ai", status_code=status.HTTP_200_OK)
+async def ai_check():
+    """
+    Validates current configured AI provider integration status.
+    """
+    provider = get_ai_provider()
+    provider_name = provider.__class__.__name__
+    return {
+        "status": "active",
+        "configured_provider": provider_name
+    }
+
+@router.get("/version", status_code=status.HTTP_200_OK)
+async def get_version():
+    """
+    Returns current API release version information.
+    """
+    return {
+        "version": "1.0.0",
+        "environment": settings.APP_ENV,
+        "app_name": settings.APP_NAME
     }

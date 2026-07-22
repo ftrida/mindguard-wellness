@@ -9,6 +9,8 @@ from app.services.recommendation_service import RecommendationService
 from app.models.coach import CoachConversationMemory
 from app.schemas.coach import CoachAdviceResponse
 
+from app.core.ai_provider import BaseAIProvider, get_ai_provider
+
 class CoachService:
     def __init__(
         self,
@@ -16,13 +18,15 @@ class CoachService:
         twin_service: TwinService,
         behavior_service: BehaviorService,
         stress_service: StressService,
-        recommendation_service: RecommendationService
+        recommendation_service: RecommendationService,
+        ai_provider: Optional[BaseAIProvider] = None
     ):
         self.coach_repo = coach_repo
         self.twin_service = twin_service
         self.behavior_service = behavior_service
         self.stress_service = stress_service
         self.recommendation_service = recommendation_service
+        self.ai_provider = ai_provider or get_ai_provider()
 
     async def get_history(self, user_id: int, limit: int = 20) -> List[CoachConversationMemory]:
         return await self.coach_repo.get_memory_by_user_id(user_id, limit)
@@ -112,24 +116,10 @@ class CoachService:
         
         # Load conversation history
         history = await self.get_history(user_id, limit=10)
+        history_list = [{"role": m.role, "content": m.content} for m in history]
 
-        # -------------------------------------------------------------
-        # NOTE FOR LLM INTEGRATION:
-        # To connect this to a live LLM (Gemini, OpenAI, etc.):
-        # 1. Instantiate the LLM SDK client.
-        # 2. Formulate the system instructions prompt including context:
-        #    system_prompt = f"You are MindGuard's AI Wellness Coach. User state: {json.dumps(context)}..."
-        # 3. Compile history messages: [{'role': m.role, 'content': m.content} for m in history]
-        # 4. Call `client.generate_content(...)` or similar API.
-        # 5. Extract response text and save it to the database as assistant role.
-        # -------------------------------------------------------------
-
-        # Fallback Template-based conversation engine
-        reply = "I've reviewed your Digital Twin logs. "
-        if context["stress_assessment"]["stress_score"] > 50.0:
-            reply += "Your current stress estimation is elevated. I recommend scheduling a focus break and staying hydrated."
-        else:
-            reply += "Your metrics look solid today! How can I assist you with your wellness routine?"
+        # Generate response using the abstract AI provider interface
+        reply = await self.ai_provider.generate_response(user_message, history_list, context)
 
         # Save assistant message to memory
         a_mem = CoachConversationMemory(
