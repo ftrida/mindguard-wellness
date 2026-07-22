@@ -4,8 +4,6 @@ services:
     env: docker
     plan: standard
     region: oregon
-    buildCommand: docker build -t mindguard-api .
-    startCommand: alembic upgrade head && gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:10000
     healthCheckPath: /api/v1/health/ready
     numInstances: 2
     disk:
