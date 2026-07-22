@@ -5,6 +5,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routers.auth import router as auth_router
 from app.api.routers.health import router as health_router
+from app.api.routers.profile import router as profile_router
+from app.api.routers.lifestyle import router as lifestyle_router
+from app.api.routers.mood import router as mood_router
+from app.api.routers.journal import router as journal_router
+from app.api.routers.meditation import router as meditation_router
+from app.api.routers.focus import router as focus_router
+from app.api.routers.notification import router as notification_router
+from app.api.routers.dashboard import router as dashboard_router
+from app.api.routers.analytics import router as analytics_router
 from app.core.config import settings
 from app.exceptions.handlers import register_exception_handlers
 from app.middleware.logging_middleware import LoggingMiddleware
@@ -52,6 +61,15 @@ register_exception_handlers(app)
 # Include API routers under the /api/v1 namespace prefix
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(health_router, prefix="/api/v1")
+app.include_router(profile_router, prefix="/api/v1")
+app.include_router(lifestyle_router, prefix="/api/v1")
+app.include_router(mood_router, prefix="/api/v1")
+app.include_router(journal_router, prefix="/api/v1")
+app.include_router(meditation_router, prefix="/api/v1")
+app.include_router(focus_router, prefix="/api/v1")
+app.include_router(notification_router, prefix="/api/v1")
+app.include_router(dashboard_router, prefix="/api/v1")
+app.include_router(analytics_router, prefix="/api/v1")
 
 @app.get("/")
 async def root():

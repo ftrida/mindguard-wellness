@@ -38,6 +38,15 @@ class User(Base, AuditMixin):
     email_verifications: Mapped[List["EmailVerification"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     login_histories: Mapped[List["LoginHistory"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     devices: Mapped[List["Device"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    profile: Mapped[Optional["UserProfile"]] = relationship(back_populates="user", cascade="all, delete-orphan", uselist=False)
+    emergency_contacts: Mapped[List["EmergencyContact"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    lifestyle_logs: Mapped[List["DailyLifestyleLog"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    mood_entries: Mapped[List["MoodEntry"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    journal_entries: Mapped[List["JournalEntry"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    meditation_sessions: Mapped[List["MeditationSession"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    focus_sessions: Mapped[List["FocusSession"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    notifications: Mapped[List["Notification"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    notification_preference: Mapped[Optional["NotificationPreference"]] = relationship(back_populates="user", cascade="all, delete-orphan", uselist=False)
 
 class RefreshToken(Base, AuditMixin):
     __tablename__ = "refresh_tokens"
