@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: mindguard-api
+    env: docker
+    plan: standard
+    region: oregon
+    buildCommand: docker build -t mindguard-api .
+    startCommand: alembic upgrade head && gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:10000
+    healthCheckPath: /api/v1/health/ready
+    numInstances: 2
+    disk:
+      name: mindguard-uploads
+      mountPath: /app/uploads
+      sizeGB: 10
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mindguard-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: mindguard-redis
+          type: redis
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: JWT_REFRESH_SECRET_KEY
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: CORS_ORIGINS
+        value: '["https://mindguard.vercel.app"]'
+
+  - type: redis
+    name: mindguard-redis
+    plan: standard
+    ipAllowList: []
+
+databases:
+  - name: mindguard-db
+    databaseName: mindguard
+    user: dbadmin
+    plan: standard
+    region: oregon
+    ipAllowList: []
