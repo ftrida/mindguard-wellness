@@ -205,13 +205,22 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
             modifier = Modifier.fillMaxWidth().height(50.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text("Register", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            if (registerState is NetworkResult.Loading) {
+                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+            } else {
+                Text("Register", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(onClick = { navController.navigate(Screen.Login.route) }) {
             Text("Already have an account? Login")
+        }
+
+        if (registerState is NetworkResult.Error) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text((registerState as NetworkResult.Error).message, color = MaterialTheme.colorScheme.error)
         }
     }
 }
