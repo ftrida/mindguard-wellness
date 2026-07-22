@@ -66,6 +66,10 @@ fun DashboardScreen(
     val twinState by viewModel.twinState.collectAsState()
     val stressState by viewModel.stressState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadDashboardData()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(

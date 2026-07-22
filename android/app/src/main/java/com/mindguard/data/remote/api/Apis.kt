@@ -34,13 +34,13 @@ interface WellnessApi {
     @GET("api/v1/mood/history")
     suspend fun getMoodHistory(): Response<List<MoodResponse>>
 
-    @GET("api/v1/journal")
+    @GET("api/v1/journals")
     suspend fun getJournals(): Response<List<JournalResponse>>
 
-    @POST("api/v1/journal")
+    @POST("api/v1/journals")
     suspend fun createJournal(@Body request: JournalCreate): Response<JournalResponse>
 
-    @POST("api/v1/meditation")
+    @POST("api/v1/meditations")
     suspend fun logMeditation(@Body request: MeditationCreate): Response<MeditationResponse>
 
     @POST("api/v1/focus")

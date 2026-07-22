@@ -62,11 +62,11 @@ data class ProfileResponse(
 )
 
 data class DailyLifestyleCreate(
+    @SerializedName("log_date") val logDate: String,
     @SerializedName("sleep_hours") val sleepHours: Float,
-    @SerializedName("screen_time_hours") val screenTimeHours: Float,
-    @SerializedName("active_minutes") val activeMinutes: Int,
-    @SerializedName("caffeine_intake_mg") val caffeineIntakeMg: Int = 0,
-    @SerializedName("water_intake_liters") val waterIntakeLiters: Float = 0.0f
+    @SerializedName("screen_time") val screenTime: Float,
+    @SerializedName("exercise_minutes") val exerciseMinutes: Int,
+    @SerializedName("water_intake") val waterIntake: Float = 0.0f
 )
 
 data class DailyLifestyleResponse(
@@ -74,15 +74,15 @@ data class DailyLifestyleResponse(
     @SerializedName("user_id") val userId: Long,
     @SerializedName("log_date") val logDate: String,
     @SerializedName("sleep_hours") val sleepHours: Float,
-    @SerializedName("screen_time_hours") val screenTimeHours: Float,
-    @SerializedName("active_minutes") val activeMinutes: Int,
-    @SerializedName("caffeine_intake_mg") val caffeineIntakeMg: Int,
-    @SerializedName("water_intake_liters") val waterIntakeLiters: Float
+    @SerializedName("screen_time") val screenTime: Float,
+    @SerializedName("exercise_minutes") val exerciseMinutes: Int,
+    @SerializedName("water_intake") val waterIntake: Float
 )
 
 data class MoodCreate(
     @SerializedName("mood_score") val moodScore: Int,
-    val notes: String? = null
+    val notes: String? = null,
+    val category: String = "Calm"
 )
 
 data class MoodResponse(
@@ -90,12 +90,14 @@ data class MoodResponse(
     @SerializedName("user_id") val userId: Long,
     @SerializedName("mood_score") val moodScore: Int,
     val notes: String?,
+    val category: String,
     @SerializedName("entry_time") val entryTime: String
 )
 
 data class JournalCreate(
     val title: String,
     val content: String,
+    val category: String = "General",
     val tags: List<String> = emptyList()
 )
 
@@ -104,20 +106,21 @@ data class JournalResponse(
     @SerializedName("user_id") val userId: Long,
     val title: String,
     val content: String,
+    val category: String,
     @SerializedName("sentiment_score") val sentimentScore: Float?,
     @SerializedName("created_at") val createdAt: String
 )
 
 data class MeditationCreate(
     @SerializedName("duration_seconds") val durationSeconds: Int,
-    @SerializedName("session_type") val sessionType: String = "guided"
+    val category: String = "Mindfulness"
 )
 
 data class MeditationResponse(
     val id: Long,
     @SerializedName("user_id") val userId: Long,
     @SerializedName("duration_seconds") val durationSeconds: Int,
-    @SerializedName("session_type") val sessionType: String,
+    val category: String,
     @SerializedName("completed_at") val completedAt: String
 )
 

@@ -1,6 +1,6 @@
 package com.mindguard.core.navigation;
 
-@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000d\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0017\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b6\u0018\u00002\u00020\u0001:\u0014\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001aB\u000f\b\u0004\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004R\u0011\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006\u0082\u0001\u0014\u001b\u001c\u001d\u001e\u001f !\"#$%&\'()*+,-.\u00a8\u0006/"}, d2 = {"Lcom/mindguard/core/navigation/Screen;", "", "route", "", "(Ljava/lang/String;)V", "getRoute", "()Ljava/lang/String;", "Achievements", "BehaviorDrift", "CoachChat", "Dashboard", "DigitalTwin", "EmergencyContacts", "EmergencyMap", "Focus", "Goals", "Journal", "Lifestyle", "Login", "Meditation", "Mood", "Profile", "Register", "Reports", "Settings", "Splash", "StressLikelihood", "Lcom/mindguard/core/navigation/Screen$Achievements;", "Lcom/mindguard/core/navigation/Screen$BehaviorDrift;", "Lcom/mindguard/core/navigation/Screen$CoachChat;", "Lcom/mindguard/core/navigation/Screen$Dashboard;", "Lcom/mindguard/core/navigation/Screen$DigitalTwin;", "Lcom/mindguard/core/navigation/Screen$EmergencyContacts;", "Lcom/mindguard/core/navigation/Screen$EmergencyMap;", "Lcom/mindguard/core/navigation/Screen$Focus;", "Lcom/mindguard/core/navigation/Screen$Goals;", "Lcom/mindguard/core/navigation/Screen$Journal;", "Lcom/mindguard/core/navigation/Screen$Lifestyle;", "Lcom/mindguard/core/navigation/Screen$Login;", "Lcom/mindguard/core/navigation/Screen$Meditation;", "Lcom/mindguard/core/navigation/Screen$Mood;", "Lcom/mindguard/core/navigation/Screen$Profile;", "Lcom/mindguard/core/navigation/Screen$Register;", "Lcom/mindguard/core/navigation/Screen$Reports;", "Lcom/mindguard/core/navigation/Screen$Settings;", "Lcom/mindguard/core/navigation/Screen$Splash;", "Lcom/mindguard/core/navigation/Screen$StressLikelihood;", "app_debug"})
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\\\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0015\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b6\u0018\u00002\u00020\u0001:\u0012\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018B\u000f\b\u0004\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004R\u0011\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006\u0082\u0001\u0012\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&\'()*\u00a8\u0006+"}, d2 = {"Lcom/mindguard/core/navigation/Screen;", "", "route", "", "(Ljava/lang/String;)V", "getRoute", "()Ljava/lang/String;", "Achievements", "BehaviorDrift", "CoachChat", "Dashboard", "DigitalTwin", "Focus", "Goals", "Journal", "Lifestyle", "Login", "Meditation", "Mood", "Profile", "Register", "Reports", "Settings", "Splash", "StressLikelihood", "Lcom/mindguard/core/navigation/Screen$Achievements;", "Lcom/mindguard/core/navigation/Screen$BehaviorDrift;", "Lcom/mindguard/core/navigation/Screen$CoachChat;", "Lcom/mindguard/core/navigation/Screen$Dashboard;", "Lcom/mindguard/core/navigation/Screen$DigitalTwin;", "Lcom/mindguard/core/navigation/Screen$Focus;", "Lcom/mindguard/core/navigation/Screen$Goals;", "Lcom/mindguard/core/navigation/Screen$Journal;", "Lcom/mindguard/core/navigation/Screen$Lifestyle;", "Lcom/mindguard/core/navigation/Screen$Login;", "Lcom/mindguard/core/navigation/Screen$Meditation;", "Lcom/mindguard/core/navigation/Screen$Mood;", "Lcom/mindguard/core/navigation/Screen$Profile;", "Lcom/mindguard/core/navigation/Screen$Register;", "Lcom/mindguard/core/navigation/Screen$Reports;", "Lcom/mindguard/core/navigation/Screen$Settings;", "Lcom/mindguard/core/navigation/Screen$Splash;", "Lcom/mindguard/core/navigation/Screen$StressLikelihood;", "app_debug"})
 public abstract class Screen {
     @org.jetbrains.annotations.NotNull()
     private final java.lang.String route = null;
@@ -56,24 +56,6 @@ public abstract class Screen {
         public static final com.mindguard.core.navigation.Screen.DigitalTwin INSTANCE = null;
         
         private DigitalTwin() {
-        }
-    }
-    
-    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002\u00a8\u0006\u0003"}, d2 = {"Lcom/mindguard/core/navigation/Screen$EmergencyContacts;", "Lcom/mindguard/core/navigation/Screen;", "()V", "app_debug"})
-    public static final class EmergencyContacts extends com.mindguard.core.navigation.Screen {
-        @org.jetbrains.annotations.NotNull()
-        public static final com.mindguard.core.navigation.Screen.EmergencyContacts INSTANCE = null;
-        
-        private EmergencyContacts() {
-        }
-    }
-    
-    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002\u00a8\u0006\u0003"}, d2 = {"Lcom/mindguard/core/navigation/Screen$EmergencyMap;", "Lcom/mindguard/core/navigation/Screen;", "()V", "app_debug"})
-    public static final class EmergencyMap extends com.mindguard.core.navigation.Screen {
-        @org.jetbrains.annotations.NotNull()
-        public static final com.mindguard.core.navigation.Screen.EmergencyMap INSTANCE = null;
-        
-        private EmergencyMap() {
         }
     }
     

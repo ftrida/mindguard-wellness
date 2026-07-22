@@ -5,6 +5,7 @@ import com.mindguard.data.remote.api.BehaviorApi;
 import com.mindguard.data.remote.api.CoachApi;
 import com.mindguard.data.remote.api.GoalsApi;
 import com.mindguard.data.remote.api.RecommendationsApi;
+import com.mindguard.data.remote.api.ReportsApi;
 import com.mindguard.data.remote.api.StressApi;
 import com.mindguard.data.remote.api.TwinApi;
 import dagger.internal.DaggerGenerated;
@@ -42,10 +43,13 @@ public final class AIRepository_Factory implements Factory<AIRepository> {
 
   private final Provider<AchievementsApi> achievementsApiProvider;
 
+  private final Provider<ReportsApi> reportsApiProvider;
+
   public AIRepository_Factory(Provider<TwinApi> twinApiProvider,
       Provider<BehaviorApi> behaviorApiProvider, Provider<StressApi> stressApiProvider,
       Provider<CoachApi> coachApiProvider, Provider<RecommendationsApi> recommendationsApiProvider,
-      Provider<GoalsApi> goalsApiProvider, Provider<AchievementsApi> achievementsApiProvider) {
+      Provider<GoalsApi> goalsApiProvider, Provider<AchievementsApi> achievementsApiProvider,
+      Provider<ReportsApi> reportsApiProvider) {
     this.twinApiProvider = twinApiProvider;
     this.behaviorApiProvider = behaviorApiProvider;
     this.stressApiProvider = stressApiProvider;
@@ -53,23 +57,25 @@ public final class AIRepository_Factory implements Factory<AIRepository> {
     this.recommendationsApiProvider = recommendationsApiProvider;
     this.goalsApiProvider = goalsApiProvider;
     this.achievementsApiProvider = achievementsApiProvider;
+    this.reportsApiProvider = reportsApiProvider;
   }
 
   @Override
   public AIRepository get() {
-    return newInstance(twinApiProvider.get(), behaviorApiProvider.get(), stressApiProvider.get(), coachApiProvider.get(), recommendationsApiProvider.get(), goalsApiProvider.get(), achievementsApiProvider.get());
+    return newInstance(twinApiProvider.get(), behaviorApiProvider.get(), stressApiProvider.get(), coachApiProvider.get(), recommendationsApiProvider.get(), goalsApiProvider.get(), achievementsApiProvider.get(), reportsApiProvider.get());
   }
 
   public static AIRepository_Factory create(Provider<TwinApi> twinApiProvider,
       Provider<BehaviorApi> behaviorApiProvider, Provider<StressApi> stressApiProvider,
       Provider<CoachApi> coachApiProvider, Provider<RecommendationsApi> recommendationsApiProvider,
-      Provider<GoalsApi> goalsApiProvider, Provider<AchievementsApi> achievementsApiProvider) {
-    return new AIRepository_Factory(twinApiProvider, behaviorApiProvider, stressApiProvider, coachApiProvider, recommendationsApiProvider, goalsApiProvider, achievementsApiProvider);
+      Provider<GoalsApi> goalsApiProvider, Provider<AchievementsApi> achievementsApiProvider,
+      Provider<ReportsApi> reportsApiProvider) {
+    return new AIRepository_Factory(twinApiProvider, behaviorApiProvider, stressApiProvider, coachApiProvider, recommendationsApiProvider, goalsApiProvider, achievementsApiProvider, reportsApiProvider);
   }
 
   public static AIRepository newInstance(TwinApi twinApi, BehaviorApi behaviorApi,
       StressApi stressApi, CoachApi coachApi, RecommendationsApi recommendationsApi,
-      GoalsApi goalsApi, AchievementsApi achievementsApi) {
-    return new AIRepository(twinApi, behaviorApi, stressApi, coachApi, recommendationsApi, goalsApi, achievementsApi);
+      GoalsApi goalsApi, AchievementsApi achievementsApi, ReportsApi reportsApi) {
+    return new AIRepository(twinApi, behaviorApi, stressApi, coachApi, recommendationsApi, goalsApi, achievementsApi, reportsApi);
   }
 }

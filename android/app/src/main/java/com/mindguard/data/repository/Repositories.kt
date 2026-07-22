@@ -10,41 +10,40 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
-
 import org.json.JSONObject
 import org.json.JSONArray
+
+fun parseNetworkError(errorBody: String?, code: Int, default: String): String {
+    if (errorBody.isNullOrEmpty()) return "$default (HTTP $code)"
+    return try {
+        val obj = JSONObject(errorBody)
+        if (obj.has("detail")) {
+            val detail = obj.get("detail")
+            if (detail is String) {
+                "$detail (HTTP $code)"
+            } else if (detail is JSONArray && detail.length() > 0) {
+                val firstError = detail.getJSONObject(0)
+                if (firstError.has("msg")) {
+                    "${firstError.getString("msg")} (HTTP $code)"
+                } else {
+                    "$default (HTTP $code)"
+                }
+            } else {
+                "$default (HTTP $code)"
+            }
+        } else {
+            "$default (HTTP $code)"
+        }
+    } catch (e: Exception) {
+        "$default (HTTP $code)"
+    }
+}
 
 @Singleton
 class AuthRepository @Inject constructor(
     private val authApi: AuthApi,
     private val tokenManager: TokenManager
 ) {
-    private fun parseErrorBody(jsonStr: String?, default: String): String {
-        if (jsonStr.isNullOrEmpty()) return default
-        return try {
-            val obj = JSONObject(jsonStr)
-            if (obj.has("detail")) {
-                val detail = obj.get("detail")
-                if (detail is String) {
-                    detail
-                } else if (detail is JSONArray && detail.length() > 0) {
-                    val firstError = detail.getJSONObject(0)
-                    if (firstError.has("msg")) {
-                        firstError.getString("msg")
-                    } else {
-                        default
-                    }
-                } else {
-                    default
-                }
-            } else {
-                jsonStr
-            }
-        } catch (e: Exception) {
-            jsonStr
-        }
-    }
-
     fun login(request: LoginRequest): Flow<NetworkResult<TokenResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
@@ -54,7 +53,7 @@ class AuthRepository @Inject constructor(
                 tokenManager.saveTokens(token.accessToken, token.refreshToken)
                 emit(NetworkResult.Success(token))
             } else {
-                val errorMsg = parseErrorBody(response.errorBody()?.string(), "Login failed")
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Login failed")
                 emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
@@ -69,7 +68,7 @@ class AuthRepository @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                val errorMsg = parseErrorBody(response.errorBody()?.string(), "Registration failed")
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Registration failed")
                 emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
@@ -96,7 +95,8 @@ class WellnessRepository @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error("Failed to fetch profile"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to fetch profile")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
@@ -110,7 +110,8 @@ class WellnessRepository @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error("Failed to update profile"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to update profile")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
@@ -127,16 +128,17 @@ class WellnessRepository @Inject constructor(
                     DailyLogEntity(
                         id = data.id,
                         sleepHours = data.sleepHours,
-                        screenTimeHours = data.screenTimeHours,
-                        activeMinutes = data.activeMinutes,
-                        caffeineIntakeMg = data.caffeineIntakeMg,
-                        waterIntakeLiters = data.waterIntakeLiters,
+                        screenTimeHours = data.screenTime,
+                        activeMinutes = data.exerciseMinutes,
+                        caffeineIntakeMg = 0,
+                        waterIntakeLiters = data.waterIntake,
                         logDate = data.logDate
                     )
                 )
                 emit(NetworkResult.Success(data))
             } else {
-                emit(NetworkResult.Error("Failed to log lifestyle metrics"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to log lifestyle metrics")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
@@ -154,7 +156,8 @@ class WellnessRepository @Inject constructor(
                 )
                 emit(NetworkResult.Success(data))
             } else {
-                emit(NetworkResult.Error("Failed to log mood"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to log mood")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
@@ -172,7 +175,8 @@ class WellnessRepository @Inject constructor(
                 )
                 emit(NetworkResult.Success(data))
             } else {
-                emit(NetworkResult.Error("Failed to create journal"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to create journal")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
@@ -186,7 +190,8 @@ class WellnessRepository @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error("Failed to fetch journals"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to fetch journals")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
@@ -200,7 +205,8 @@ class WellnessRepository @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error("Failed to log meditation session"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to log meditation session")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
@@ -214,13 +220,13 @@ class WellnessRepository @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error("Failed to log focus session"))
+                val errorMsg = parseNetworkError(response.errorBody()?.string(), response.code(), "Failed to log focus session")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
         }
     }
-
 }
 
 @Singleton
@@ -238,106 +244,179 @@ class AIRepository @Inject constructor(
         emit(NetworkResult.Loading)
         try {
             val res = reportsApi.getDailyReport()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to fetch daily report"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to fetch daily report")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getWeeklyReport(): Flow<NetworkResult<Map<String, Any>>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = reportsApi.getWeeklyReport()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to fetch weekly report"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to fetch weekly report")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
+
     fun getTwin(): Flow<NetworkResult<DigitalTwinResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = twinApi.getTwin()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to fetch Digital Twin metrics"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to fetch Digital Twin metrics")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getBehaviorDrift(): Flow<NetworkResult<BehaviorDriftResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = behaviorApi.getBehaviorDrift()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to fetch behavior drift"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to fetch behavior drift")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getStressAssessment(): Flow<NetworkResult<StressLikelihoodResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = stressApi.getStressAssessment()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to fetch stress assessment"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to fetch stress assessment")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun sendCoachMessage(message: String): Flow<NetworkResult<CoachChatResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = coachApi.sendChatMessage(CoachChatRequest(message))
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to send chat message"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to send chat message")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getMemory(): Flow<NetworkResult<List<CoachMemoryItem>>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = coachApi.getMemory()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to fetch conversation history"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to fetch conversation history")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getCoachAdvice(): Flow<NetworkResult<CoachAdviceResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = coachApi.getProactiveAdvice()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to load coach advice"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to load coach advice")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getRecommendations(): Flow<NetworkResult<List<RecommendationResponse>>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = recommendationsApi.getRecommendations()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to load recommendations"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to load recommendations")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getGoals(): Flow<NetworkResult<List<GoalResponse>>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = goalsApi.getGoals()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to load goals"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to load goals")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getAchievements(): Flow<NetworkResult<List<AchievementResponse>>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = achievementsApi.getAchievements()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to load achievements"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to load achievements")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 
     fun getStreak(): Flow<NetworkResult<StreakResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
             val res = achievementsApi.getStreak()
-            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
-            else emit(NetworkResult.Error("Failed to load streak metrics"))
-        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+            if (res.isSuccessful && res.body() != null) {
+                emit(NetworkResult.Success(res.body()!!))
+            } else {
+                val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to load streak metrics")
+                emit(NetworkResult.Error(errorMsg, res.code()))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
     }
 }
