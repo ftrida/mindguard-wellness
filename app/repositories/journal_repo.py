@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -52,3 +53,13 @@ class JournalRepository:
         stmt = select(JournalEntry).options(selectinload(JournalEntry.tags)).where(JournalEntry.id == entry.id)
         res = await self.db.execute(stmt)
         return res.scalars().first()
+
+    async def get_range(self, user_id: int, start_datetime: datetime, end_datetime: datetime) -> List[JournalEntry]:
+        stmt = select(JournalEntry).options(selectinload(JournalEntry.tags)).where(
+            JournalEntry.user_id == user_id,
+            JournalEntry.created_at >= start_datetime,
+            JournalEntry.created_at <= end_datetime,
+            JournalEntry.is_deleted == False
+        ).order_by(JournalEntry.created_at.desc())
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all())

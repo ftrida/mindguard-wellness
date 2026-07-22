@@ -47,6 +47,13 @@ class User(Base, AuditMixin):
     focus_sessions: Mapped[List["FocusSession"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     notifications: Mapped[List["Notification"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     notification_preference: Mapped[Optional["NotificationPreference"]] = relationship(back_populates="user", cascade="all, delete-orphan", uselist=False)
+    lifestyle_twins: Mapped[List["DigitalLifestyleTwin"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    behavior_logs: Mapped[List["BehaviorLog"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    stress_likelihoods: Mapped[List["StressLikelihood"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    coach_conversations: Mapped[List["CoachConversationMemory"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    recommendations: Mapped[List["Recommendation"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    goals: Mapped[List["Goal"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    achievements: Mapped[List["Achievement"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 class RefreshToken(Base, AuditMixin):
     __tablename__ = "refresh_tokens"
