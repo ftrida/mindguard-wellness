@@ -79,12 +79,12 @@
 44-->[androidx.core:core:1.12.0] C:\Users\rishi\.gradle\caches\transforms-3\ae005141d4b7a46ffd6623df79dcd879\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 45        android:debuggable="true"
 46        android:extractNativeLibs="false"
-47        android:icon="@android:mipmap/sym_def_app_icon"
-47-->C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:15:9-56
+47        android:icon="@drawable/ic_launcher"
+47-->C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:15:9-45
 48        android:label="MindGuard AI"
 48-->C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:16:9-37
-49        android:roundIcon="@android:mipmap/sym_def_app_icon"
-49-->C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:17:9-61
+49        android:roundIcon="@drawable/ic_launcher"
+49-->C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:17:9-50
 50        android:supportsRtl="true"
 50-->C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:18:9-35
 51        android:testOnly="true"

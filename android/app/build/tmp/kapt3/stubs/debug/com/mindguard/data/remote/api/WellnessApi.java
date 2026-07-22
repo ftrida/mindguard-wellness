@@ -39,19 +39,19 @@ public abstract interface WellnessApi {
     public abstract java.lang.Object getMoodHistory(@org.jetbrains.annotations.NotNull()
     kotlin.coroutines.Continuation<? super retrofit2.Response<java.util.List<com.mindguard.data.remote.dto.MoodResponse>>> $completion);
     
-    @retrofit2.http.GET(value = "api/v1/journal")
+    @retrofit2.http.GET(value = "api/v1/journals")
     @org.jetbrains.annotations.Nullable()
     public abstract java.lang.Object getJournals(@org.jetbrains.annotations.NotNull()
     kotlin.coroutines.Continuation<? super retrofit2.Response<java.util.List<com.mindguard.data.remote.dto.JournalResponse>>> $completion);
     
-    @retrofit2.http.POST(value = "api/v1/journal")
+    @retrofit2.http.POST(value = "api/v1/journals")
     @org.jetbrains.annotations.Nullable()
     public abstract java.lang.Object createJournal(@retrofit2.http.Body()
     @org.jetbrains.annotations.NotNull()
     com.mindguard.data.remote.dto.JournalCreate request, @org.jetbrains.annotations.NotNull()
     kotlin.coroutines.Continuation<? super retrofit2.Response<com.mindguard.data.remote.dto.JournalResponse>> $completion);
     
-    @retrofit2.http.POST(value = "api/v1/meditation")
+    @retrofit2.http.POST(value = "api/v1/meditations")
     @org.jetbrains.annotations.Nullable()
     public abstract java.lang.Object logMeditation(@retrofit2.http.Body()
     @org.jetbrains.annotations.NotNull()

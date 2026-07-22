@@ -56,6 +56,7 @@ class Settings(BaseSettings):
     SMTP_FROM_NAME: str = "MindGuard AI Team"
 
     # AI Configuration
-    AI_PROVIDER: str = "mock"
+    AI_PROVIDER: str = "gemini"
+    GEMINI_API_KEY: str = "AQ.Ab8RN6K468zq7B96y4rfVpTamJtgtjUOgQT-oinJtPjp-cAdTQ"
 
 settings = Settings()

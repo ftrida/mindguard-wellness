@@ -17,6 +17,7 @@ import com.mindguard.core.di.NetworkModule_ProvideCoachApiFactory;
 import com.mindguard.core.di.NetworkModule_ProvideGoalsApiFactory;
 import com.mindguard.core.di.NetworkModule_ProvideOkHttpClientFactory;
 import com.mindguard.core.di.NetworkModule_ProvideRecommendationsApiFactory;
+import com.mindguard.core.di.NetworkModule_ProvideReportsApiFactory;
 import com.mindguard.core.di.NetworkModule_ProvideRetrofitFactory;
 import com.mindguard.core.di.NetworkModule_ProvideStressApiFactory;
 import com.mindguard.core.di.NetworkModule_ProvideTokenManagerFactory;
@@ -35,6 +36,7 @@ import com.mindguard.data.remote.api.BehaviorApi;
 import com.mindguard.data.remote.api.CoachApi;
 import com.mindguard.data.remote.api.GoalsApi;
 import com.mindguard.data.remote.api.RecommendationsApi;
+import com.mindguard.data.remote.api.ReportsApi;
 import com.mindguard.data.remote.api.StressApi;
 import com.mindguard.data.remote.api.TwinApi;
 import com.mindguard.data.remote.api.WellnessApi;
@@ -620,6 +622,8 @@ public final class DaggerMindGuardApplication_HiltComponents_SingletonC {
 
     private Provider<AchievementsApi> provideAchievementsApiProvider;
 
+    private Provider<ReportsApi> provideReportsApiProvider;
+
     private Provider<AIRepository> aIRepositoryProvider;
 
     private Provider<AuthApi> provideAuthApiProvider;
@@ -670,12 +674,13 @@ public final class DaggerMindGuardApplication_HiltComponents_SingletonC {
       this.provideRecommendationsApiProvider = DoubleCheck.provider(new SwitchingProvider<RecommendationsApi>(singletonCImpl, 8));
       this.provideGoalsApiProvider = DoubleCheck.provider(new SwitchingProvider<GoalsApi>(singletonCImpl, 9));
       this.provideAchievementsApiProvider = DoubleCheck.provider(new SwitchingProvider<AchievementsApi>(singletonCImpl, 10));
+      this.provideReportsApiProvider = DoubleCheck.provider(new SwitchingProvider<ReportsApi>(singletonCImpl, 11));
       this.aIRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AIRepository>(singletonCImpl, 0));
-      this.provideAuthApiProvider = DoubleCheck.provider(new SwitchingProvider<AuthApi>(singletonCImpl, 12));
-      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 11));
-      this.provideWellnessApiProvider = DoubleCheck.provider(new SwitchingProvider<WellnessApi>(singletonCImpl, 14));
-      this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<MindGuardDatabase>(singletonCImpl, 15));
-      this.wellnessRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WellnessRepository>(singletonCImpl, 13));
+      this.provideAuthApiProvider = DoubleCheck.provider(new SwitchingProvider<AuthApi>(singletonCImpl, 13));
+      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 12));
+      this.provideWellnessApiProvider = DoubleCheck.provider(new SwitchingProvider<WellnessApi>(singletonCImpl, 15));
+      this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<MindGuardDatabase>(singletonCImpl, 16));
+      this.wellnessRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WellnessRepository>(singletonCImpl, 14));
     }
 
     @Override
@@ -712,7 +717,7 @@ public final class DaggerMindGuardApplication_HiltComponents_SingletonC {
       public T get() {
         switch (id) {
           case 0: // com.mindguard.data.repository.AIRepository 
-          return (T) new AIRepository(singletonCImpl.provideTwinApiProvider.get(), singletonCImpl.provideBehaviorApiProvider.get(), singletonCImpl.provideStressApiProvider.get(), singletonCImpl.provideCoachApiProvider.get(), singletonCImpl.provideRecommendationsApiProvider.get(), singletonCImpl.provideGoalsApiProvider.get(), singletonCImpl.provideAchievementsApiProvider.get());
+          return (T) new AIRepository(singletonCImpl.provideTwinApiProvider.get(), singletonCImpl.provideBehaviorApiProvider.get(), singletonCImpl.provideStressApiProvider.get(), singletonCImpl.provideCoachApiProvider.get(), singletonCImpl.provideRecommendationsApiProvider.get(), singletonCImpl.provideGoalsApiProvider.get(), singletonCImpl.provideAchievementsApiProvider.get(), singletonCImpl.provideReportsApiProvider.get());
 
           case 1: // com.mindguard.data.remote.api.TwinApi 
           return (T) NetworkModule_ProvideTwinApiFactory.provideTwinApi(singletonCImpl.provideRetrofitProvider.get());
@@ -744,19 +749,22 @@ public final class DaggerMindGuardApplication_HiltComponents_SingletonC {
           case 10: // com.mindguard.data.remote.api.AchievementsApi 
           return (T) NetworkModule_ProvideAchievementsApiFactory.provideAchievementsApi(singletonCImpl.provideRetrofitProvider.get());
 
-          case 11: // com.mindguard.data.repository.AuthRepository 
+          case 11: // com.mindguard.data.remote.api.ReportsApi 
+          return (T) NetworkModule_ProvideReportsApiFactory.provideReportsApi(singletonCImpl.provideRetrofitProvider.get());
+
+          case 12: // com.mindguard.data.repository.AuthRepository 
           return (T) new AuthRepository(singletonCImpl.provideAuthApiProvider.get(), singletonCImpl.provideTokenManagerProvider.get());
 
-          case 12: // com.mindguard.data.remote.api.AuthApi 
+          case 13: // com.mindguard.data.remote.api.AuthApi 
           return (T) NetworkModule_ProvideAuthApiFactory.provideAuthApi(singletonCImpl.provideRetrofitProvider.get());
 
-          case 13: // com.mindguard.data.repository.WellnessRepository 
+          case 14: // com.mindguard.data.repository.WellnessRepository 
           return (T) new WellnessRepository(singletonCImpl.provideWellnessApiProvider.get(), singletonCImpl.lifestyleDao(), singletonCImpl.moodDao(), singletonCImpl.journalDao());
 
-          case 14: // com.mindguard.data.remote.api.WellnessApi 
+          case 15: // com.mindguard.data.remote.api.WellnessApi 
           return (T) NetworkModule_ProvideWellnessApiFactory.provideWellnessApi(singletonCImpl.provideRetrofitProvider.get());
 
-          case 15: // com.mindguard.data.local.db.MindGuardDatabase 
+          case 16: // com.mindguard.data.local.db.MindGuardDatabase 
           return (T) DatabaseModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);

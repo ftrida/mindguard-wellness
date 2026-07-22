@@ -724,6 +724,7 @@ int drawable ic_call_answer_video 0x7f080070
 int drawable ic_call_answer_video_low 0x7f080071
 int drawable ic_call_decline 0x7f080072
 int drawable ic_call_decline_low 0x7f080073
+int drawable ic_launcher 0x7f080084
 int drawable notification_action_background 0x7f080074
 int drawable notification_bg 0x7f080075
 int drawable notification_bg_low 0x7f080076

@@ -180,9 +180,9 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\rishi\.gradle\cach
 	android:label
 		ADDED from C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:16:9-37
 	android:roundIcon
-		ADDED from C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:17:9-61
+		ADDED from C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:17:9-50
 	android:icon
-		ADDED from C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:15:9-56
+		ADDED from C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:15:9-45
 	android:allowBackup
 		ADDED from C:\Users\rishi\OneDrive\Desktop\MG\android\app\src\main\AndroidManifest.xml:14:9-35
 	android:theme

@@ -1,4 +1,6 @@
 import logging
+import json
+import httpx
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 from app.core.config import settings
@@ -25,17 +27,58 @@ class MockAIProvider(BaseAIProvider):
 
 class GeminiAIProvider(BaseAIProvider):
     async def generate_response(self, prompt: str, history: List[Dict[str, str]], context: Dict[str, Any]) -> str:
-        logger.info("Calling Google Gemini GenAI SDK...")
-        # ----------------------------------------------------------------------
-        # PLACEHOLDER FOR LIVE GEMINI CALL:
-        # import google.generativeai as genai
-        # genai.configure(api_key=settings.GEMINI_API_KEY)
-        # model = genai.GenerativeModel("gemini-1.5-flash")
-        # system_instruction = f"You are MindGuard's AI Wellness Coach. Context: {context}"
-        # response = await model.generate_content_async(prompt)
-        # return response.text
-        # ----------------------------------------------------------------------
-        return "[Gemini AI Adaptor Stub] Your Digital Twin baselines show healthy bounds."
+        logger.info("Calling Google Gemini REST API...")
+        api_key = settings.GEMINI_API_KEY or "AQ.Ab8RN6K468zq7B96y4rfVpTamJtgtjUOgQT-oinJtPjp-cAdTQ"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+
+        # Build prompt with instruction
+        system_instruction = (
+            "You are MindGuard's AI Wellness Coach. Your goal is to guide the user towards healthy habits "
+            "based on their Digital Twin metrics, stress index, and lifestyle consistency logs. Be supportive, empathetic, "
+            "and concise. Avoid prescribing medical treatments.\n"
+            f"Current User Context:\n{json.dumps(context, indent=2)}"
+        )
+
+        # Construct messages list for Gemini contents
+        contents = []
+        for item in history:
+            role = "user" if item.get("role") == "user" else "model"
+            contents.append({
+                "role": role,
+                "parts": [{"text": item.get("content", "")}]
+            })
+
+        # Add the current prompt if not already in history
+        contents.append({
+            "role": "user",
+            "parts": [{"text": prompt}]
+        })
+
+        payload = {
+            "contents": contents,
+            "systemInstruction": {
+                "parts": [{"text": system_instruction}]
+            }
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                res = await client.post(url, json=payload)
+                if res.status_code == 200:
+                    res_json = res.json()
+                    candidates = res_json.get("candidates", [])
+                    if candidates:
+                        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                        if text:
+                            return text.strip()
+                    logger.error(f"Invalid Gemini response structure: {res_json}")
+                    return "I'm having trouble analyzing your request. Please try again soon."
+                else:
+                    logger.error(f"Gemini API returned status code {res.status_code}: {res.text}")
+                    return "I'm having trouble connecting to my AI core right now, but please continue tracking your habits."
+        except Exception as e:
+            logger.exception("Failed to connect to Gemini API")
+            return "I couldn't reach my AI wellness coach server. Let's try again in a moment."
 
 class OpenAIAIProvider(BaseAIProvider):
     async def generate_response(self, prompt: str, history: List[Dict[str, str]], context: Dict[str, Any]) -> str:
