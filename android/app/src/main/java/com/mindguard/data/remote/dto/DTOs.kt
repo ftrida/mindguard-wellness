@@ -32,19 +32,33 @@ data class UserResponse(
 
 // --- Wellness DTOs ---
 data class ProfileRequest(
-    val age: Int?,
-    val gender: String?,
-    val occupation: String?,
-    @SerializedName("stress_baseline") val stressBaseline: Float?
+    @SerializedName("profile_photo_url") val profilePhotoUrl: String? = null,
+    val dob: String? = null,
+    val gender: String? = null,
+    val height: Float? = null,
+    val weight: Float? = null,
+    val timezone: String? = "UTC",
+    val country: String? = null,
+    val language: String? = "en",
+    val occupation: String? = null,
+    @SerializedName("emergency_preferences") val emergencyPreferences: String? = null
 )
 
 data class ProfileResponse(
     val id: Long,
     @SerializedName("user_id") val userId: Long,
-    val age: Int?,
+    @SerializedName("profile_photo_url") val profilePhotoUrl: String?,
+    val dob: String?,
     val gender: String?,
+    val height: Float?,
+    val weight: Float?,
+    val timezone: String,
+    val country: String?,
+    val language: String,
     val occupation: String?,
-    @SerializedName("stress_baseline") val stressBaseline: Float?
+    @SerializedName("emergency_preferences") val emergencyPreferences: String?,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String
 )
 
 data class DailyLifestyleCreate(

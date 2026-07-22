@@ -16,10 +16,10 @@ interface AuthApi {
 }
 
 interface WellnessApi {
-    @GET("api/v1/profile/me")
+    @GET("api/v1/profile")
     suspend fun getProfile(): Response<ProfileResponse>
 
-    @POST("api/v1/profile")
+    @PUT("api/v1/profile")
     suspend fun updateProfile(@Body request: ProfileRequest): Response<ProfileResponse>
 
     @POST("api/v1/lifestyle")

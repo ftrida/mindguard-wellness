@@ -28,6 +28,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import com.mindguard.data.remote.dto.ProfileRequest
+import com.mindguard.data.remote.dto.ProfileResponse
+import com.mindguard.data.remote.dto.UserResponse
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +50,12 @@ class AuthViewModel @Inject constructor(
     private val _registerState = MutableStateFlow<NetworkResult<Any>?>(null)
     val registerState: StateFlow<NetworkResult<Any>?> = _registerState
 
+    private val _profileState = MutableStateFlow<NetworkResult<ProfileResponse>?>(null)
+    val profileState: StateFlow<NetworkResult<ProfileResponse>?> = _profileState
+
+    private val _updateProfileState = MutableStateFlow<NetworkResult<ProfileResponse>?>(null)
+    val updateProfileState: StateFlow<NetworkResult<ProfileResponse>?> = _updateProfileState
+
     fun login(emailOrUsername: String, pass: String) {
         viewModelScope.launch {
             authRepository.login(LoginRequest(emailOrUsername, pass)).collect {
@@ -55,6 +68,25 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.register(RegisterRequest(email, username, pass, fullName)).collect {
                 _registerState.value = it
+            }
+        }
+    }
+
+    fun loadProfile() {
+        viewModelScope.launch {
+            wellnessRepository.getProfile().collect {
+                _profileState.value = it
+            }
+        }
+    }
+
+    fun updateProfile(request: ProfileRequest) {
+        viewModelScope.launch {
+            wellnessRepository.updateProfile(request).collect {
+                _updateProfileState.value = it
+                if (it is NetworkResult.Success) {
+                    _profileState.value = it
+                }
             }
         }
     }
@@ -225,22 +257,177 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("User Profile", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(32.dp))
+    val profileState by viewModel.profileState.collectAsState()
+    val updateState by viewModel.updateProfileState.collectAsState()
+    
+    var isEditing by remember { mutableStateOf(false) }
+    var gender by remember { mutableStateOf("") }
+    var dob by remember { mutableStateOf("") }
+    var height by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf("") }
+    var timezone by remember { mutableStateOf("UTC") }
+    var country by remember { mutableStateOf("") }
+    var language by remember { mutableStateOf("en") }
+    var occupation by remember { mutableStateOf("") }
+    var emergencyPreferences by remember { mutableStateOf("") }
 
-        Button(
-            onClick = { viewModel.logout(navController) },
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-            modifier = Modifier.fillMaxWidth()
+    LaunchedEffect(Unit) {
+        viewModel.loadProfile()
+    }
+
+    LaunchedEffect(profileState) {
+        if (profileState is NetworkResult.Success) {
+            val data = (profileState as NetworkResult.Success<ProfileResponse>).data
+            gender = data.gender ?: ""
+            dob = data.dob ?: ""
+            height = data.height?.toString() ?: ""
+            weight = data.weight?.toString() ?: ""
+            timezone = data.timezone
+            country = data.country ?: ""
+            language = data.language
+            occupation = data.occupation ?: ""
+            emergencyPreferences = data.emergencyPreferences ?: ""
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Profile Management", fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        if (isEditing) {
+                            val req = ProfileRequest(
+                                dob = dob.ifEmpty { null },
+                                gender = gender.ifEmpty { null },
+                                height = height.toFloatOrNull(),
+                                weight = weight.toFloatOrNull(),
+                                timezone = timezone,
+                                country = country.ifEmpty { null },
+                                language = language,
+                                occupation = occupation.ifEmpty { null },
+                                emergencyPreferences = emergencyPreferences.ifEmpty { null }
+                            )
+                            viewModel.updateProfile(req)
+                            isEditing = false
+                        } else {
+                            isEditing = true
+                        }
+                    }) {
+                        Icon(
+                            imageVector = if (isEditing) Icons.Default.Check else Icons.Default.Edit,
+                            contentDescription = if (isEditing) "Save" else "Edit"
+                        )
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
         ) {
-            Text("Log Out")
+            when (profileState) {
+                is NetworkResult.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                is NetworkResult.Error -> {
+                    Text(
+                        text = (profileState as NetworkResult.Error).message,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // User Profile circular avatar
+                        Box(
+                            modifier = Modifier
+                                .size(100.dp)
+                                .background(MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(50.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "MG",
+                                fontSize = 32.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        if (isEditing) {
+                            OutlinedTextField(value = gender, onValueChange = { gender = it }, label = { Text("Gender") }, modifier = Modifier.fillMaxWidth())
+                            OutlinedTextField(value = dob, onValueChange = { dob = it }, label = { Text("Date of Birth (YYYY-MM-DD)") }, modifier = Modifier.fillMaxWidth())
+                            OutlinedTextField(value = height, onValueChange = { height = it }, label = { Text("Height (cm)") }, modifier = Modifier.fillMaxWidth())
+                            OutlinedTextField(value = weight, onValueChange = { weight = it }, label = { Text("Weight (kg)") }, modifier = Modifier.fillMaxWidth())
+                            OutlinedTextField(value = country, onValueChange = { country = it }, label = { Text("Country") }, modifier = Modifier.fillMaxWidth())
+                            OutlinedTextField(value = occupation, onValueChange = { occupation = it }, label = { Text("Occupation") }, modifier = Modifier.fillMaxWidth())
+                            OutlinedTextField(value = emergencyPreferences, onValueChange = { emergencyPreferences = it }, label = { Text("Emergency Preferences") }, modifier = Modifier.fillMaxWidth())
+                        } else {
+                            ProfileDetailRow(label = "Gender", value = gender.ifEmpty { "Not specified" })
+                            ProfileDetailRow(label = "Date of Birth", value = dob.ifEmpty { "Not specified" })
+                            ProfileDetailRow(label = "Height", value = if (height.isNotEmpty()) "$height cm" else "Not specified")
+                            ProfileDetailRow(label = "Weight", value = if (weight.isNotEmpty()) "$weight kg" else "Not specified")
+                            ProfileDetailRow(label = "Country", value = country.ifEmpty { "Not specified" })
+                            ProfileDetailRow(label = "Occupation", value = occupation.ifEmpty { "Not specified" })
+                            ProfileDetailRow(label = "Language", value = language)
+                            ProfileDetailRow(label = "Timezone", value = timezone)
+                            ProfileDetailRow(label = "Emergency Prefs", value = emergencyPreferences.ifEmpty { "None" })
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = { viewModel.logout(navController) },
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                            modifier = Modifier.fillMaxWidth().height(50.dp),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text("Log Out", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        }
+
+                        if (updateState is NetworkResult.Success) {
+                            Text("Profile updated successfully!", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileDetailRow(label: String, value: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(label, fontWeight = FontWeight.Medium, color = Color.Gray)
+            Text(value, fontWeight = FontWeight.Bold)
         }
     }
 }

@@ -103,6 +103,20 @@ class WellnessRepository @Inject constructor(
         }
     }
 
+    fun updateProfile(request: ProfileRequest): Flow<NetworkResult<ProfileResponse>> = flow {
+        emit(NetworkResult.Loading)
+        try {
+            val response = wellnessApi.updateProfile(request)
+            if (response.isSuccessful && response.body() != null) {
+                emit(NetworkResult.Success(response.body()!!))
+            } else {
+                emit(NetworkResult.Error("Failed to update profile"))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
+    }
+
     fun logLifestyle(log: DailyLifestyleCreate): Flow<NetworkResult<DailyLifestyleResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
@@ -165,33 +179,48 @@ class WellnessRepository @Inject constructor(
         }
     }
 
-    fun getEmergencyContacts(): Flow<NetworkResult<List<EmergencyContactResponse>>> = flow {
+    fun getJournals(): Flow<NetworkResult<List<JournalResponse>>> = flow {
         emit(NetworkResult.Loading)
         try {
-            val response = wellnessApi.getEmergencyContacts()
+            val response = wellnessApi.getJournals()
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error("Failed to fetch emergency contacts"))
+                emit(NetworkResult.Error("Failed to fetch journals"))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
         }
     }
 
-    fun createEmergencyContact(contact: EmergencyContactCreate): Flow<NetworkResult<EmergencyContactResponse>> = flow {
+    fun logMeditation(duration: Int): Flow<NetworkResult<MeditationResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
-            val response = wellnessApi.createEmergencyContact(contact)
+            val response = wellnessApi.logMeditation(MeditationCreate(durationSeconds = duration))
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error("Failed to save contact"))
+                emit(NetworkResult.Error("Failed to log meditation session"))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error"))
         }
     }
+
+    fun logFocus(duration: Int): Flow<NetworkResult<FocusSessionResponse>> = flow {
+        emit(NetworkResult.Loading)
+        try {
+            val response = wellnessApi.logFocus(FocusSessionCreate(customDurationSeconds = duration))
+            if (response.isSuccessful && response.body() != null) {
+                emit(NetworkResult.Success(response.body()!!))
+            } else {
+                emit(NetworkResult.Error("Failed to log focus session"))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message ?: "Network error"))
+        }
+    }
+
 }
 
 @Singleton
@@ -202,8 +231,26 @@ class AIRepository @Inject constructor(
     private val coachApi: CoachApi,
     private val recommendationsApi: RecommendationsApi,
     private val goalsApi: GoalsApi,
-    private val achievementsApi: AchievementsApi
+    private val achievementsApi: AchievementsApi,
+    private val reportsApi: ReportsApi
 ) {
+    fun getDailyReport(): Flow<NetworkResult<Map<String, Any>>> = flow {
+        emit(NetworkResult.Loading)
+        try {
+            val res = reportsApi.getDailyReport()
+            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
+            else emit(NetworkResult.Error("Failed to fetch daily report"))
+        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+    }
+
+    fun getWeeklyReport(): Flow<NetworkResult<Map<String, Any>>> = flow {
+        emit(NetworkResult.Loading)
+        try {
+            val res = reportsApi.getWeeklyReport()
+            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
+            else emit(NetworkResult.Error("Failed to fetch weekly report"))
+        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+    }
     fun getTwin(): Flow<NetworkResult<DigitalTwinResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
@@ -237,6 +284,15 @@ class AIRepository @Inject constructor(
             val res = coachApi.sendChatMessage(CoachChatRequest(message))
             if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
             else emit(NetworkResult.Error("Failed to send chat message"))
+        } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
+    }
+
+    fun getMemory(): Flow<NetworkResult<List<CoachMemoryItem>>> = flow {
+        emit(NetworkResult.Loading)
+        try {
+            val res = coachApi.getMemory()
+            if (res.isSuccessful && res.body() != null) emit(NetworkResult.Success(res.body()!!))
+            else emit(NetworkResult.Error("Failed to fetch conversation history"))
         } catch (e: Exception) { emit(NetworkResult.Error(e.message ?: "Network error")) }
     }
 

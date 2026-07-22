@@ -9,7 +9,6 @@ import com.mindguard.ui.dashboard.DashboardScreen
 import com.mindguard.ui.wellness.*
 import com.mindguard.ui.ai.*
 import com.mindguard.ui.gamification.*
-import com.mindguard.ui.maps.EmergencyMapScreen
 import com.mindguard.ui.settings.SettingsScreen
 
 @Composable
@@ -37,8 +36,6 @@ fun NavGraph(
         composable(Screen.Goals.route) { GoalsScreen(navController) }
         composable(Screen.Achievements.route) { AchievementsScreen(navController) }
         composable(Screen.Reports.route) { ReportsScreen(navController) }
-        composable(Screen.EmergencyContacts.route) { EmergencyContactsScreen(navController) }
-        composable(Screen.EmergencyMap.route) { EmergencyMapScreen(navController) }
         composable(Screen.Profile.route) { ProfileScreen(navController) }
         composable(Screen.Settings.route) { SettingsScreen(navController) }
     }

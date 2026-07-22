@@ -87,46 +87,61 @@ fun DashboardScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
+            // Welcome Greeting & Date
+            Text(
+                text = "Welcome Back, User",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Today is Thursday, July 23, 2026",
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
             // Wellness Gauge Card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp),
+                    .height(130.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(20.dp),
+                        .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text("Personal Wellness Score", fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                        Text("Personal Wellness Score", fontSize = 14.sp, fontWeight = FontWeight.Medium)
                         Spacer(modifier = Modifier.height(4.dp))
                         val score = (twinState as? NetworkResult.Success)?.data?.wellnessScore ?: 85.0f
-                        Text("${score.toInt()}/100", fontSize = 32.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                        Text("Optimal Baseline Stability", fontSize = 12.sp, color = Color.Gray)
+                        Text("${score.toInt()}/100", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                        Text("Optimal Baseline Stability", fontSize = 11.sp, color = Color.Gray)
                     }
                     Icon(
                         Icons.Default.Favorite,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text("Quick Modules", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.weight(1f)
             ) {
                 item { QuickModuleCard("Digital Twin", Icons.Default.AccountBox, MaterialTheme.colorScheme.primary) { navController.navigate(Screen.DigitalTwin.route) } }
                 item { QuickModuleCard("Behavior Drift", Icons.Default.Timeline, MaterialTheme.colorScheme.secondary) { navController.navigate(Screen.BehaviorDrift.route) } }
@@ -139,7 +154,6 @@ fun DashboardScreen(
                 item { QuickModuleCard("Focus Session", Icons.Default.Timer, Color(0xFF0D3B66)) { navController.navigate(Screen.Focus.route) } }
                 item { QuickModuleCard("Goals & Streaks", Icons.Default.Star, Color(0xFF8E44AD)) { navController.navigate(Screen.Goals.route) } }
                 item { QuickModuleCard("Reports & Export", Icons.Default.Assessment, Color(0xFF27AE60)) { navController.navigate(Screen.Reports.route) } }
-                item { QuickModuleCard("Emergency SOS", Icons.Default.LocationOn, Color(0xFFE74C3C)) { navController.navigate(Screen.EmergencyMap.route) } }
             }
         }
     }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -46,6 +47,9 @@ class AIViewModel @Inject constructor(
     private val _chatResponse = MutableStateFlow<NetworkResult<CoachChatResponse>?>(null)
     val chatResponse: StateFlow<NetworkResult<CoachChatResponse>?> = _chatResponse
 
+    private val _memory = MutableStateFlow<List<CoachMemoryItem>>(emptyList())
+    val memory: StateFlow<List<CoachMemoryItem>> = _memory
+
     private val _recs = MutableStateFlow<NetworkResult<List<RecommendationResponse>>?>(null)
     val recs: StateFlow<NetworkResult<List<RecommendationResponse>>?> = _recs
 
@@ -54,9 +58,29 @@ class AIViewModel @Inject constructor(
     fun loadStress() { viewModelScope.launch { aiRepository.getStressAssessment().collect { _stress.value = it } } }
     fun loadRecs() { viewModelScope.launch { aiRepository.getRecommendations().collect { _recs.value = it } } }
 
+    fun loadMemory() {
+        viewModelScope.launch {
+            aiRepository.getMemory().collect { res ->
+                if (res is NetworkResult.Success) {
+                    _memory.value = res.data
+                }
+            }
+        }
+    }
+
     fun sendMessage(msg: String) {
         viewModelScope.launch {
-            aiRepository.sendCoachMessage(msg).collect { _chatResponse.value = it }
+            // Optimistic update
+            val current = _memory.value.toMutableList()
+            current.add(CoachMemoryItem(role = "user", content = msg))
+            _memory.value = current
+
+            aiRepository.sendCoachMessage(msg).collect { res ->
+                _chatResponse.value = res
+                if (res is NetworkResult.Success) {
+                    _memory.value = res.data.memory
+                }
+            }
         }
     }
 }
@@ -129,42 +153,111 @@ fun StressLikelihoodScreen(navController: NavController, viewModel: AIViewModel 
 @Composable
 fun AICoachChatScreen(navController: NavController, viewModel: AIViewModel = hiltViewModel()) {
     var textMessage by remember { mutableStateOf("") }
+    val memory by viewModel.memory.collectAsState()
     val chatState by viewModel.chatResponse.collectAsState()
+    val listState = rememberLazyListState()
 
-    Scaffold(topBar = { TopAppBar(title = { Text("AI Wellness Coach") }, navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.Default.ArrowBack, contentDescription = null) } }) }) { padding ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
-            val memory = (chatState as? NetworkResult.Success)?.data?.memory ?: emptyList()
-            LazyColumn(modifier = Modifier.weight(1f)) {
+    LaunchedEffect(Unit) {
+        viewModel.loadMemory()
+    }
+
+    LaunchedEffect(memory.size) {
+        if (memory.isNotEmpty()) {
+            listState.animateScrollToItem(memory.size - 1)
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("AI Wellness Coach", fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+        ) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(memory) { msg ->
                     val isUser = msg.role == "user"
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
                     ) {
                         Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = if (isUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+                            shape = RoundedCornerShape(16.dp),
+                            color = if (isUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                            tonalElevation = 2.dp
                         ) {
-                            Text(msg.content, modifier = Modifier.padding(12.dp), color = if (isUser) Color.White else Color.Black)
+                            Text(
+                                text = msg.content,
+                                modifier = Modifier.padding(12.dp),
+                                color = if (isUser) Color.White else Color.Black,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+                }
+
+                if (chatState is NetworkResult.Loading) {
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            Surface(
+                                shape = RoundedCornerShape(16.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant
+                            ) {
+                                Text(
+                                    text = "Coach is thinking...",
+                                    modifier = Modifier.padding(12.dp),
+                                    color = Color.Gray,
+                                    fontSize = 12.sp
+                                )
+                            }
                         }
                     }
                 }
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 OutlinedTextField(
                     value = textMessage,
                     onValueChange = { textMessage = it },
                     placeholder = { Text("Ask your AI Coach...") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(24.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                IconButton(onClick = {
-                    if (textMessage.isNotBlank()) {
-                        viewModel.sendMessage(textMessage)
-                        textMessage = ""
-                    }
-                }) { Icon(Icons.Default.Send, contentDescription = "Send") }
+                IconButton(
+                    onClick = {
+                        if (textMessage.isNotBlank()) {
+                            viewModel.sendMessage(textMessage)
+                            textMessage = ""
+                        }
+                    },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(50.dp))
+                ) {
+                    Icon(Icons.Default.Send, contentDescription = "Send", tint = Color.White)
+                }
             }
         }
     }
