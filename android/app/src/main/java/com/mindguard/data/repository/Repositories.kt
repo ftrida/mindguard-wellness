@@ -11,11 +11,40 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+import org.json.JSONObject
+import org.json.JSONArray
+
 @Singleton
 class AuthRepository @Inject constructor(
     private val authApi: AuthApi,
     private val tokenManager: TokenManager
 ) {
+    private fun parseErrorBody(jsonStr: String?, default: String): String {
+        if (jsonStr.isNullOrEmpty()) return default
+        return try {
+            val obj = JSONObject(jsonStr)
+            if (obj.has("detail")) {
+                val detail = obj.get("detail")
+                if (detail is String) {
+                    detail
+                } else if (detail is JSONArray && detail.length() > 0) {
+                    val firstError = detail.getJSONObject(0)
+                    if (firstError.has("msg")) {
+                        firstError.getString("msg")
+                    } else {
+                        default
+                    }
+                } else {
+                    default
+                }
+            } else {
+                jsonStr
+            }
+        } catch (e: Exception) {
+            jsonStr
+        }
+    }
+
     fun login(request: LoginRequest): Flow<NetworkResult<TokenResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
@@ -25,7 +54,8 @@ class AuthRepository @Inject constructor(
                 tokenManager.saveTokens(token.accessToken, token.refreshToken)
                 emit(NetworkResult.Success(token))
             } else {
-                emit(NetworkResult.Error(response.errorBody()?.string() ?: "Login failed", response.code()))
+                val errorMsg = parseErrorBody(response.errorBody()?.string(), "Login failed")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error occurred"))
@@ -39,7 +69,8 @@ class AuthRepository @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(NetworkResult.Success(response.body()!!))
             } else {
-                emit(NetworkResult.Error(response.errorBody()?.string() ?: "Registration failed", response.code()))
+                val errorMsg = parseErrorBody(response.errorBody()?.string(), "Registration failed")
+                emit(NetworkResult.Error(errorMsg, response.code()))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: "Network error occurred"))
