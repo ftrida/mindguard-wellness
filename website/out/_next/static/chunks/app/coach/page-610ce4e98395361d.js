@@ -1,0 +1,51 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[160],{5342:function(e,t,a){Promise.resolve().then(a.bind(a,8437))},5032:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("Activity",[["path",{d:"M22 12h-4l-3 9L9 3l-3 9H2",key:"d5dnw9"}]])},9496:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("Award",[["circle",{cx:"12",cy:"8",r:"6",key:"1vp47v"}],["path",{d:"M15.477 12.89 17 22l-5-3-5 3 1.523-9.11",key:"em7aur"}]])},4562:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("BookOpen",[["path",{d:"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z",key:"vv98re"}],["path",{d:"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z",key:"1cyq3y"}]])},1472:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("Brain",[["path",{d:"M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z",key:"1mhkh5"}],["path",{d:"M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z",key:"1d6s00"}]])},9475:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("FileText",[["path",{d:"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z",key:"1rqfz7"}],["path",{d:"M14 2v4a2 2 0 0 0 2 2h4",key:"tnqrlb"}],["path",{d:"M10 9H8",key:"b1mrlr"}],["path",{d:"M16 13H8",key:"t4e002"}],["path",{d:"M16 17H8",key:"z1uh3a"}]])},5423:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("LayoutDashboard",[["rect",{width:"7",height:"9",x:"3",y:"3",rx:"1",key:"10lvy0"}],["rect",{width:"7",height:"5",x:"14",y:"3",rx:"1",key:"16une8"}],["rect",{width:"7",height:"9",x:"14",y:"12",rx:"1",key:"1hutg5"}],["rect",{width:"7",height:"5",x:"3",y:"16",rx:"1",key:"ldoo1y"}]])},438:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("MessageSquare",[["path",{d:"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",key:"1lielz"}]])},65:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("ShieldAlert",[["path",{d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10",key:"1irkt0"}],["path",{d:"M12 8v4",key:"1got3b"}],["path",{d:"M12 16h.01",key:"1drbdi"}]])},706:function(e,t,a){"use strict";a.d(t,{Z:function(){return r}});/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let r=(0,a(7461).Z)("Smile",[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"M8 14s1.5 2 4 2 4-2 4-2",key:"1y1vjs"}],["line",{x1:"9",x2:"9.01",y1:"9",y2:"9",key:"yxxnd0"}],["line",{x1:"15",x2:"15.01",y1:"9",y2:"9",key:"1p4y9e"}]])},7907:function(e,t,a){"use strict";var r=a(5313);a.o(r,"usePathname")&&a.d(t,{usePathname:function(){return r.usePathname}}),a.o(r,"useRouter")&&a.d(t,{useRouter:function(){return r.useRouter}})},8437:function(e,t,a){"use strict";a.r(t),a.d(t,{default:function(){return c}});var r=a(3827),s=a(4090),n=a(6652),o=a(5461),i=a(438);/**
+ * @license lucide-react v0.330.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */let l=(0,a(7461).Z)("Send",[["path",{d:"m22 2-7 20-4-9-9-4Z",key:"1q3vgg"}],["path",{d:"M22 2 11 13",key:"nzbqef"}]]);function c(){let[e,t]=(0,s.useState)([]),[a,c]=(0,s.useState)(""),[d,h]=(0,s.useState)(!1),u=(0,s.useRef)(null);(0,s.useEffect)(()=>{o.d.getMemory().then(e=>{e.data&&t(e.data)}).catch(e=>console.log(e))},[]),(0,s.useEffect)(()=>{var e;null===(e=u.current)||void 0===e||e.scrollIntoView({behavior:"smooth"})},[e]);let f=async e=>{if(e.preventDefault(),!a.trim()||d)return;let r=a.trim();c(""),t(e=>[...e,{role:"user",content:r}]),h(!0);try{var s;let e=await o.d.sendCoachMessage(r);(null===(s=e.data)||void 0===s?void 0:s.memory)&&t(e.data.memory)}catch(e){console.error(e)}finally{h(!1)}};return(0,r.jsxs)("div",{className:"flex min-h-screen",children:[(0,r.jsx)(n.Y,{}),(0,r.jsxs)("div",{className:"flex-1 flex flex-col h-screen",children:[(0,r.jsxs)("div",{className:"p-6 border-b border-slate-800 bg-slate-900/40",children:[(0,r.jsxs)("h1",{className:"text-2xl font-bold flex items-center gap-2",children:[(0,r.jsx)(i.Z,{className:"w-6 h-6 text-teal-400"})," AI Wellness Coach"]}),(0,r.jsx)("p",{className:"text-slate-400 text-xs mt-1",children:"Converse with your Digital Twin integrated coach advisor"})]}),(0,r.jsxs)("div",{className:"flex-1 overflow-y-auto p-6 space-y-4",children:[e.map((e,t)=>{let a="user"===e.role;return(0,r.jsx)("div",{className:"flex ".concat(a?"justify-end":"justify-start"),children:(0,r.jsx)("div",{className:"max-w-md p-4 rounded-2xl text-sm leading-relaxed ".concat(a?"bg-teal-500 text-slate-950 font-medium":"bg-slate-900 text-slate-100 border border-slate-800"),children:e.content})},t)}),d&&(0,r.jsx)("div",{className:"flex justify-start",children:(0,r.jsx)("div",{className:"bg-slate-950 text-slate-400 text-xs p-3 rounded-lg border border-slate-900 italic",children:"Coach is typing..."})}),(0,r.jsx)("div",{ref:u})]}),(0,r.jsxs)("form",{onSubmit:f,className:"p-6 border-t border-slate-800 bg-slate-900/40 flex gap-3",children:[(0,r.jsx)("input",{type:"text",required:!0,value:a,onChange:e=>c(e.target.value),placeholder:"Type your message here...",className:"flex-1 bg-slate-950 border border-slate-850 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-teal-500"}),(0,r.jsx)("button",{type:"submit",disabled:d,className:"bg-teal-500 hover:bg-teal-600 text-slate-900 font-bold p-3.5 rounded-xl transition flex items-center justify-center disabled:opacity-50",children:(0,r.jsx)(l,{className:"w-5 h-5"})})]})]})]})}},6652:function(e,t,a){"use strict";a.d(t,{Y:function(){return p}});var r=a(3827);a(4090);var s=a(8792),n=a(7907),o=a(5423),i=a(5032),l=a(706),c=a(4562),d=a(1472),h=a(438),u=a(9496),f=a(9475),m=a(65);let p=()=>{let e=(0,n.usePathname)(),t=[{name:"Dashboard",href:"/dashboard",icon:o.Z},{name:"Lifestyle Tracker",href:"/lifestyle",icon:i.Z},{name:"Mood Tracker",href:"/mood",icon:l.Z},{name:"Mindfulness Journal",href:"/journal",icon:c.Z},{name:"Digital Twin",href:"/twin",icon:d.Z},{name:"AI Coach Chat",href:"/coach",icon:h.Z},{name:"Goals & Badges",href:"/goals",icon:u.Z},{name:"Reports & Export",href:"/reports",icon:f.Z},{name:"Admin Portal",href:"/admin",icon:m.Z}];return(0,r.jsx)("aside",{className:"w-64 bg-slate-900 border-r border-slate-800 text-slate-300 min-h-screen p-4",children:(0,r.jsx)("div",{className:"space-y-1",children:t.map(t=>{let a=t.icon,n=e===t.href;return(0,r.jsxs)(s.default,{href:t.href,className:"flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition ".concat(n?"bg-teal-500/10 text-teal-400 border-l-4 border-teal-400":"hover:bg-slate-800 hover:text-white"),children:[(0,r.jsx)(a,{className:"w-5 h-5"}),t.name]},t.href)})})})}},8222:function(e,t,a){"use strict";a.d(t,{h:function(){return n}});var r=a(7534);let s="https://mindguard-api-gz19.onrender.com",n=r.Z.create({baseURL:s,headers:{"Content-Type":"application/json"}});n.interceptors.request.use(e=>{{let t=localStorage.getItem("access_token");t&&e.headers&&(e.headers.Authorization="Bearer ".concat(t))}return e}),n.interceptors.response.use(e=>e,async e=>{var t,a;let o=e.config;if((null===(t=e.response)||void 0===t?void 0:t.status)===401&&!o._retry){o._retry=!0;try{let e=localStorage.getItem("refresh_token");if(e){let t=await r.Z.post("".concat(s,"/api/v1/auth/refresh"),{refresh_token:e});if(null===(a=t.data)||void 0===a?void 0:a.access_token)return localStorage.setItem("access_token",t.data.access_token),o.headers.Authorization="Bearer ".concat(t.data.access_token),n(o)}}catch(e){localStorage.removeItem("access_token"),localStorage.removeItem("refresh_token"),window.location.href="/login"}}return Promise.reject(e)})},5461:function(e,t,a){"use strict";a.d(t,{d:function(){return s}});var r=a(8222);let s={logLifestyle:e=>r.h.post("/api/v1/lifestyle",e),logMood:e=>r.h.post("/api/v1/mood",e),createJournal:e=>r.h.post("/api/v1/journal",e),getTwin:()=>r.h.get("/api/v1/twin"),getBehaviorDrift:()=>r.h.get("/api/v1/behavior/drift"),getStressAssessment:()=>r.h.get("/api/v1/stress/assessment"),sendCoachMessage:e=>r.h.post("/api/v1/coach/chat",{content:e}),getCoachAdvice:()=>r.h.get("/api/v1/coach/advice"),getMemory:()=>r.h.get("/api/v1/coach/conversation"),getGoals:()=>r.h.get("/api/v1/goals"),getAchievements:()=>r.h.get("/api/v1/achievements"),getStreak:()=>r.h.get("/api/v1/achievements/streak"),getDailyReport:()=>r.h.get("/api/v1/reports/daily"),getHealth:()=>r.h.get("/health"),getSystemHealth:()=>r.h.get("/health/system"),getSchedulerHealth:()=>r.h.get("/health/scheduler")}}},function(e){e.O(0,[250,937,971,69,744],function(){return e(e.s=5342)}),_N_E=e.O()}]);
