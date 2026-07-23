@@ -4,7 +4,7 @@ export const apiServices = {
   // Wellness
   logLifestyle: (data: { sleep_hours: number; screen_time_hours: number; active_minutes: number }) =>
     api.post('/api/v1/lifestyle', data),
-  logMood: (data: { mood_score: number; category: string; notes?: string }) =>
+  logMood: (data: { mood_score: number; notes?: string }) =>
     api.post('/api/v1/mood', data),
   createJournal: (data: { title: string; content: string }) =>
     api.post('/api/v1/journal', data),

@@ -7,11 +7,8 @@ import { Smile, Check } from 'lucide-react';
 
 export default function MoodPage() {
   const [mood, setMood] = useState(5);
-  const [category, setCategory] = useState('Calm');
   const [notes, setNotes] = useState('');
   const [success, setSuccess] = useState(false);
-
-  const categories = ["Calm", "Happy", "Energetic", "Sad", "Anxious", "Angry", "Tired", "Stressed"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +16,6 @@ export default function MoodPage() {
     try {
       await apiServices.logMood({
         mood_score: mood,
-        category: category,
         notes: notes.trim() ? notes : undefined,
       });
       setSuccess(true);
@@ -51,26 +47,6 @@ export default function MoodPage() {
                 onChange={(e) => setMood(parseInt(e.target.value))}
                 className="w-full h-2 bg-slate-850 rounded-lg appearance-none cursor-pointer accent-teal-400"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Select Primary Category</label>
-              <div className="grid grid-cols-4 gap-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setCategory(cat)}
-                    className={`py-2 px-3 rounded-lg border text-sm transition font-medium ${
-                      category === cat
-                        ? 'bg-teal-500 border-teal-500 text-slate-900 shadow-md'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
             </div>
 
             <div>
