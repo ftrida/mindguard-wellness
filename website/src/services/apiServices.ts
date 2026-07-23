@@ -15,6 +15,7 @@ export const apiServices = {
   getStressAssessment: () => api.get('/api/v1/stress/assessment'),
   sendCoachMessage: (content: string) => api.post('/api/v1/coach/chat', { content }),
   getCoachAdvice: () => api.get('/api/v1/coach/advice'),
+  getMemory: () => api.get('/api/v1/coach/conversation'),
 
   // Gamification & Reports
   getGoals: () => api.get('/api/v1/goals'),
