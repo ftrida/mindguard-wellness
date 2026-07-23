@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://mindguard-api-gz19.onrender.com/"
+    private const val BASE_URL = "http://10.0.2.2:10000/"
 
     @Provides
     @Singleton
