@@ -156,6 +156,7 @@ fun AICoachChatScreen(navController: NavController, viewModel: AIViewModel = hil
     val memory by viewModel.memory.collectAsState()
     val chatState by viewModel.chatResponse.collectAsState()
     val listState = rememberLazyListState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.loadMemory()
@@ -167,7 +168,14 @@ fun AICoachChatScreen(navController: NavController, viewModel: AIViewModel = hil
         }
     }
 
+    LaunchedEffect(chatState) {
+        if (chatState is NetworkResult.Error) {
+            snackbarHostState.showSnackbar((chatState as NetworkResult.Error).message)
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("AI Wellness Coach", fontWeight = FontWeight.Bold) },
