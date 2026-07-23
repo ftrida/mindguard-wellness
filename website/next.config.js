@@ -5,7 +5,7 @@ const nextConfig = {
     unoptimized: true,
   },
   env: {
-    NEXT_PUBLIC_API_URL: 'http://localhost:10000',
+    NEXT_PUBLIC_API_URL: 'https://mindguard-api-gz19.onrender.com',
   },
 };
 
