@@ -1,5 +1,6 @@
 package com.mindguard.data.repository
 
+import android.util.Log
 import com.mindguard.core.network.NetworkResult
 import com.mindguard.data.local.dao.*
 import com.mindguard.data.local.datastore.TokenManager
@@ -318,14 +319,18 @@ class AIRepository @Inject constructor(
     fun sendCoachMessage(message: String): Flow<NetworkResult<CoachChatResponse>> = flow {
         emit(NetworkResult.Loading)
         try {
+            Log.d("AIRepository", "sendCoachMessage: sending request body content='$message'")
             val res = coachApi.sendChatMessage(CoachChatRequest(message))
             if (res.isSuccessful && res.body() != null) {
+                Log.d("AIRepository", "sendCoachMessage successful, reply='${res.body()!!.reply}'")
                 emit(NetworkResult.Success(res.body()!!))
             } else {
                 val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to send chat message")
+                Log.e("AIRepository", "sendCoachMessage Retrofit error: code=${res.code()}, message='$errorMsg'")
                 emit(NetworkResult.Error(errorMsg, res.code()))
             }
         } catch (e: Exception) {
+            Log.e("AIRepository", "sendCoachMessage exception: ${e.message}", e)
             emit(NetworkResult.Error(e.message ?: "Network error"))
         }
     }
@@ -333,14 +338,18 @@ class AIRepository @Inject constructor(
     fun getMemory(): Flow<NetworkResult<List<CoachMemoryItem>>> = flow {
         emit(NetworkResult.Loading)
         try {
+            Log.d("AIRepository", "getMemory: fetching conversation history...")
             val res = coachApi.getMemory()
             if (res.isSuccessful && res.body() != null) {
+                Log.d("AIRepository", "getMemory successful, items count=${res.body()!!.size}")
                 emit(NetworkResult.Success(res.body()!!))
             } else {
                 val errorMsg = parseNetworkError(res.errorBody()?.string(), res.code(), "Failed to fetch conversation history")
+                Log.e("AIRepository", "getMemory Retrofit error: code=${res.code()}, message='$errorMsg'")
                 emit(NetworkResult.Error(errorMsg, res.code()))
             }
         } catch (e: Exception) {
+            Log.e("AIRepository", "getMemory exception: ${e.message}", e)
             emit(NetworkResult.Error(e.message ?: "Network error"))
         }
     }

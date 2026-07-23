@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.draw.alpha
+import androidx.compose.animation.core.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -72,8 +74,10 @@ class AIViewModel @Inject constructor(
         viewModelScope.launch {
             // Optimistic update
             val current = _memory.value.toMutableList()
-            current.add(CoachMemoryItem(role = "user", content = msg))
-            _memory.value = current
+            if (current.isEmpty() || current.last().content != msg || current.last().role != "user") {
+                current.add(CoachMemoryItem(role = "user", content = msg))
+                _memory.value = current
+            }
 
             aiRepository.sendCoachMessage(msg).collect { res ->
                 _chatResponse.value = res
@@ -221,6 +225,16 @@ fun AICoachChatScreen(navController: NavController, viewModel: AIViewModel = hil
 
                 if (chatState is NetworkResult.Loading) {
                     item {
+                        val infiniteTransition = rememberInfiniteTransition(label = "typing")
+                        val alpha by infiniteTransition.animateFloat(
+                            initialValue = 0.3f,
+                            targetValue = 1.0f,
+                            animationSpec = infiniteRepeatable(
+                                animation = tween(800, easing = LinearEasing),
+                                repeatMode = RepeatMode.Reverse
+                            ),
+                            label = "alpha"
+                        )
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                             horizontalArrangement = Arrangement.Start
@@ -231,10 +245,41 @@ fun AICoachChatScreen(navController: NavController, viewModel: AIViewModel = hil
                             ) {
                                 Text(
                                     text = "Coach is thinking...",
-                                    modifier = Modifier.padding(12.dp),
+                                    modifier = Modifier.padding(12.dp).alpha(alpha),
                                     color = Color.Gray,
                                     fontSize = 12.sp
                                 )
+                            }
+                        }
+                    }
+                }
+
+                if (chatState is NetworkResult.Error) {
+                    val error = chatState as NetworkResult.Error
+                    item {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = "Connection Error: ${error.message}",
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                val lastUserMsg = memory.lastOrNull { it.role == "user" }?.content
+                                if (lastUserMsg != null) {
+                                    Button(
+                                        onClick = { viewModel.sendMessage(lastUserMsg) },
+                                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                                    ) {
+                                        Text("Retry Message", color = Color.White)
+                                    }
+                                }
                             }
                         }
                     }

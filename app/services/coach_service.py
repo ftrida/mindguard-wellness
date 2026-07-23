@@ -1,6 +1,9 @@
 import json
+import logging
 from datetime import date, datetime
 from typing import Optional, List, Dict, Any
+
+logger = logging.getLogger("mindguard.coach_service")
 from app.repositories.coach_repo import CoachRepository
 from app.services.twin_service import TwinService
 from app.services.behavior_service import BehaviorService
@@ -119,7 +122,11 @@ class CoachService:
         history_list = [{"role": m.role, "content": m.content} for m in history]
 
         # Generate response using the abstract AI provider interface
-        reply = await self.ai_provider.generate_response(user_message, history_list, context)
+        try:
+            reply = await self.ai_provider.generate_response(user_message, history_list, context)
+        except Exception as ex:
+            logger.exception("Unexpected exception inside AI provider generate_response")
+            reply = "I'm having trouble analyzing your request right now. Please tell me more about how you're feeling."
 
         # Save assistant message to memory
         a_mem = CoachConversationMemory(
