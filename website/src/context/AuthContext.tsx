@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.get('/api/v1/auth/me');
       setUser(res.data);
     } catch (err) {
+      console.error("fetchCurrentUser failed:", err);
       logout();
     } finally {
       setLoading(false);
@@ -59,6 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await fetchCurrentUser();
       return true;
     } catch (err) {
+      console.error("Login request failed:", err);
       return false;
     }
   };

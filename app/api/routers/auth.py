@@ -54,6 +54,28 @@ async def login(
         refresh_token=refresh_token
     )
 
+@router.post("/debug-user")
+async def debug_user(
+    email: str,
+    db: AsyncSession = Depends(get_db)
+):
+    from sqlalchemy import select
+    from app.models.auth import User
+    stmt = select(User).where(User.email == email)
+    result = await db.execute(stmt)
+    user = result.scalars().first()
+    if not user:
+        return {"status": "not found"}
+    return {
+        "status": "found",
+        "id": user.id,
+        "email": user.email,
+        "username": user.username,
+        "is_active": user.is_active,
+        "is_verified": user.is_verified,
+        "hashed_password": user.hashed_password
+    }
+
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh(
     data: RefreshRequest,
