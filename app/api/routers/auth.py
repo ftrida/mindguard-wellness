@@ -76,6 +76,27 @@ async def debug_user(
         "hashed_password": user.hashed_password
     }
 
+@router.post("/reset-debug-user-password")
+async def reset_debug_user_password(
+    email: str,
+    db: AsyncSession = Depends(get_db)
+):
+    from sqlalchemy import select
+    from app.models.auth import User
+    from app.core.security import get_password_hash
+    stmt = select(User).where(User.email == email)
+    result = await db.execute(stmt)
+    user = result.scalars().first()
+    if not user:
+        return {"status": "not found"}
+    user.hashed_password = get_password_hash("Password123@")
+    await db.flush()
+    return {
+        "status": "updated",
+        "email": user.email,
+        "username": user.username
+    }
+
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh(
     data: RefreshRequest,
