@@ -28,3 +28,11 @@ ENV/
 
 # Log files
 *.log
+
+# Dependency directories
+node_modules/
+website/node_modules/
+
+# Next.js build output
+.next/
+website/.next/

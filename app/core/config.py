@@ -45,7 +45,12 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
 
     # CORS configuration
-    CORS_ORIGINS: Annotated[List[str], BeforeValidator(parse_cors_origins)] = []
+    CORS_ORIGINS: Annotated[List[str], BeforeValidator(parse_cors_origins)] = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173"
+    ]
 
     # SMTP Mail settings
     SMTP_HOST: str = "smtp.gmail.com"
